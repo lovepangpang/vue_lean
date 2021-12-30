@@ -1,5 +1,6 @@
 import { isObject, isArray } from "../utils";
 import { arrayMethods } from "./array";
+import Dep from "./dep";
 
 class Observer {
   constructor(value){
@@ -33,10 +34,19 @@ class Observer {
 function defineReactive(obj, key, value) {
   // 递归处理
   observe(value);
+
+  let dep = new Dep(); // 为每个属性都增加个dep
+  console.log('dep :>> ', dep);
+
   // 闭包，不能被释放
   // console.log(obj, key, value)
   Object.defineProperty(obj, key, {
     get(){
+      debugger;
+      if(Dep.target) {
+        dep.depend();
+      }
+      console.log(dep, key);
       // console.log('递归get', key, value);
       return value;
     },
@@ -45,6 +55,7 @@ function defineReactive(obj, key, value) {
       // 如果设置的是一个对象，那么会再次进行劫持
       observe(newValue);
       value = newValue;
+      dep.notify();
     }
   })
 }

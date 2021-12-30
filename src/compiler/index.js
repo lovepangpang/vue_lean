@@ -1,32 +1,5 @@
 import { parseHTML } from "./parser";
-
-function genProps(attrs) {
-  let str = '';
-  for (let i = 0; i < attrs.length; i++) {
-    const attr = attrs[i];
-    if(attr.name === 'style') {
-      let styles = {};
-      attr.value.replace(/([^:;]+):([^;:]+)/g, function(){
-        debugger;
-        console.log(arguments);
-        styles[arguments[1]] = arguments[2];
-      })
-      attr.value = styles;
-    }
-    str+=`${attr.name}:${JSON.stringify(attr.value)},`;
-  }
-  return `{${str.slice(0, -1)}}`;
-}
-
-function generate(ast) {
-  let code = `_c('${ast.tag}', ${
-    ast.attrs.length ? genProps(ast.attrs) : 'undefined'
-  }${
-    ast.children ? `,[]` : ''
-  })`
-  return code
-}
-
+import { generate } from "./generate"
 export function compileToFunction(template) {
   // 1. 将模板变成ast语法树
   let ast = parseHTML(template);
@@ -35,6 +8,10 @@ export function compileToFunction(template) {
   // 2.代码生成
   let code = generate(ast);
   console.log('code :>> ', code);
+  // with语句 扩展一个语句的作用域链
+  let render = new Function(`with(this){return ${code}}`);
+  console.log(render);
+  return render;
 }
 
 // 1. 编译原理
