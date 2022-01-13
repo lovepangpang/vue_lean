@@ -1,4 +1,5 @@
 import Dep from "./dep";
+import { queueWatcher } from './scheduler';
 
 let id = 0;
 class Watcher {
@@ -24,11 +25,18 @@ class Watcher {
   }
   get(){
     Dep.target = this;
-    debugger;
     this.getter();
     Dep.target = null;
   }
   update(){
+    // 每次更新数据都会同步调用这个update方法，我可以将更新的逻辑环迅起来，等同步更新数据的逻辑执行完毕后，依次调用
+    queueWatcher(this);
+    // 可以做异步更新，
+    // this.get();
+    console.log('缓存更新 :>> ', '缓存更新');
+  }
+  run() {
+    console.log('真正更新！');
     this.get();
   }
 

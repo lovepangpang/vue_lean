@@ -14,11 +14,11 @@ export function initState(vm) {
 function proxy(vm, key, source) {
   Object.defineProperty(vm, key, {
     get() {
-      console.log('proxy取值');
+      // console.log('proxy取值');
       return vm[source][key];
     },
     set(newVal) {
-      console.log('proxy赋值');
+      // console.log('proxy赋值');
       vm[source][key] = newVal;
     }
   })

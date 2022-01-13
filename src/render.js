@@ -11,7 +11,7 @@ export function renderMinxin (Vue) {
     return createText(vm, text);
   }
   Vue.prototype._s = function(val) { // JSON.stringify()
-    console.log('_s :>> ', val);
+    // console.log('_s :>> ', val);
     if(isObject(val)) return JSON.stringify(val);
     return val;
   }

@@ -33,6 +33,7 @@ methods.forEach( method => {
     }
     if (inserted.length) {
       ob.observeArray(inserted);
+      ob.dep.notify(); // 触发页面更新流程
     }
   }
 })
